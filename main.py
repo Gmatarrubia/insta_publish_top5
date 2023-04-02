@@ -1,6 +1,8 @@
+#!/usr/bin/python3
 from instabot import Bot
 import requests
 import argparse
+import os
 
 # Import your custom credentials
 # Modify the class Credentials with your values
@@ -40,6 +42,15 @@ def publish_the_image(prompt, hastags):
     print("Picture uploaded successfully.")
     bot.logout()
 
+def clean_env():
+    try:
+        os.rmdir('config')
+    except:
+        pass
+    try:
+        os.rmdir('image.jpg.REMOVE_ME')
+    except:
+        pass
 
 def main():
     parser = argparse.ArgumentParser()
@@ -58,6 +69,7 @@ def main():
         else:
             break
 
+    clean_env()
     get_the_image(str(args.url))
     publish_the_image(str(args.prompt), hastags)
     print("Action complete.")
