@@ -13,7 +13,7 @@ def get_the_image(url):
     if response.status_code == 200:
         with open(image_path, 'wb') as f:
             f.write(response.content)
-        print(f'Successfully downloaded {url} as {image_path}.')
+        print(f'Successfully downloaded.')
     else:
         print(f'Failed to download {url}. Status code: {response.status_code}.')
         exit(1)
@@ -23,10 +23,10 @@ def publish_the_image(prompt, hastags):
     credential = Credentials()
     image_path = 'image.jpg'
 
-    caption = 'Rate this picture from 0 to 5 ✍️....👇🏼👀. \
-                Prompt: ' + prompt + ' #top5 #DallE #IA #daily'
+    caption = 'Rate this picture from 0 to 5 ✍️....👇🏼👀. ' + \
+               'Prompt: ' + prompt + ' #top5 #DallE #IA #daily'
     for hastag in hastags:
-        caption.append(' #' + hastag)
+        caption += (' #' + str(hastag))
 
     bot = Bot()
     bot.login(username=credential.username,
@@ -34,7 +34,7 @@ def publish_the_image(prompt, hastags):
 
     # Publish the photo with caption
     print("Uploading the picture...")
-    bot.upload_photo(image_path, caption=prompt)
+    bot.upload_photo(image_path, caption=caption)
 
     # Logout from your account
     print("Picture uploaded successfully.")
@@ -43,16 +43,24 @@ def publish_the_image(prompt, hastags):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('url', action='store', type=str, requried=True,
+    parser.add_argument('--url', action='store', type=str,
                         help='url from the bing image creator')
-    parser.add_argument('prompt', action='store', type=str, required= True,
+    parser.add_argument('--prompt', action='store', type=str,
                         help='continue to the next target on error')
 
     args = parser.parse_args()
 
+    hastags = []
+    while True:
+        hastag = input('Enter a hastag (or press Enter to finish): ')
+        if hastag:
+            hastags.append(hastag)
+        else:
+            break
+
     get_the_image(str(args.url))
-    publish_the_image(str(args.prompt))
+    publish_the_image(str(args.prompt), hastags)
     print("Action complete.")
 
-if __name__ == main:
+if __name__ == "__main__":
     main()
