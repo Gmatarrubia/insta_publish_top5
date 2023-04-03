@@ -3,6 +3,8 @@ from instabot import Bot
 import requests
 import argparse
 import os
+from bs4 import BeautifulSoup
+from shutil import rmtree
 
 # Import your custom credentials
 # Modify the class Credentials with your values
@@ -44,11 +46,11 @@ def publish_the_image(prompt, hastags):
 
 def clean_env():
     try:
-        os.rmdir('config')
+        rmtree('config')
     except:
         pass
     try:
-        os.rmdir('image.jpg.REMOVE_ME')
+        rmtree('image.jpg.REMOVE_ME')
     except:
         pass
 
