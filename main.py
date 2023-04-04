@@ -27,8 +27,14 @@ def publish_the_image(prompt, hastags):
     credential = Credentials()
     image_path = 'image.jpg'
 
-    caption = 'Rate this picture from 0 to 5 ✍️....👇🏼👀. ' + \
-               'Prompt: ' + prompt + ' #top5 #DallE #IA #daily'
+    caption = 'Crafted by Dall-E generative IA art. 🤖 \n' \
+                + 'Prompt: ' + prompt + "\n" \
+                + 'Follow me for inspiration. Push your imagination.' \
+                + 'Learn more about prompts and styles.' \
+                + 'More content in my profile, check it out!.' \
+                + 'I read your comments. What do you like the most? ✍ 👀 \n' \
+                + '#top5 #DallE #IA #daily #prompt #art #design'
+
     for hastag in hastags:
         caption += (' #' + str(hastag))
 
