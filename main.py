@@ -27,13 +27,14 @@ def publish_the_image(prompt, hastags):
     credential = Credentials()
     image_path = 'image.jpg'
 
-    caption = 'Crafted by Dall-E generative IA art. 🤖 \n' \
-                + 'Prompt: ' + prompt + "\n" \
-                + 'Follow me for inspiration. Push your imagination.' \
-                + 'Learn more about prompts and styles.' \
+    caption = 'Crafted by Dall-E. 🤖 \n\r' \
+                + 'Prompt: ' + prompt + "\n\r\n\r" \
+                + 'Follow me for inspiration and push your imagination. ' \
+                + 'Learn more about prompts and styles. \n\r\n\r' \
                 + 'More content in my profile, check it out!.' \
-                + 'I read your comments. What do you like the most? ✍ 👀 \n' \
-                + '#top5 #DallE #IA #daily #prompt #art #design'
+                + 'I read your comments. What do you like the most? ✍ 👀 \n\r\n\r' \
+                + '#top5 #DallE #IA #daily #prompt #art #design #midjourney #stabledifussion' \
+                + ' #generativedesign #generativeartist '
 
     for hastag in hastags:
         caption += (' #' + str(hastag))
