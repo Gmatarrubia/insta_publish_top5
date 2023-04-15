@@ -11,21 +11,30 @@ from shutil import rmtree
 from credentials import Credentials
 
 image_path = 'image.jpg'
+work_folder = 'pics'
+num_of_pics = 1
 
-def get_the_image(url):
-    response = requests.get(url)
-    if response.status_code == 200:
-        with open(image_path, 'wb') as f:
-            f.write(response.content)
-        print(f'Successfully downloaded.')
-    else:
-        print(f'Failed to download {url}. Status code: {response.status_code}.')
-        exit(1)
+def get_the_images(urls):
+    os.mkdir(work_folder)
+    pic_num = 0
+    for url in urls:
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(os.path.join(work_folder, str(pic_num) + '_' + image_path), 'wb') as f:
+                f.write(response.content)
+            pic_num += 1
+            print(f'Successfully downloaded.')
+        else:
+            print(f'Failed to download {url}. Status code: {response.status_code}.')
+            exit(1)
 
 
-def publish_the_image(prompt, hastags):
+def publish_the_images(prompt, hastags):
     credential = Credentials()
-    image_path = 'image.jpg'
+    images = sorted(os.listdir(work_folder))
+    # Prepend folder to all the files
+    aux_images = [os.path.join(work_folder,s) for s in images]
+    images = aux_images
 
     caption = 'Crafted by Dall-E. 🤖 \n\r' \
                 + 'Prompt: ' + prompt + "\n\r\n\r" \
@@ -43,33 +52,23 @@ def publish_the_image(prompt, hastags):
     bot.login(username=credential.username,
             password=credential.password)
 
-    # Publish the photo with caption
-    print("Uploading the picture...")
-    bot.upload_photo(image_path, caption=caption)
+    if len(images) == 1:
+        # Publish the photo with caption
+        print("Uploading the picture...")
+        bot.upload_photo(images[0], caption=caption)
+    elif len(images) > 1:
+        # Publish the carrousel of photos with caption
+        print("Uploading " + str(len(images)) + " pictures...")
+        bot.upload_album(images, caption=caption)
+    else:
+        print("Error in the number of pics.")
+        exit(1)
 
     # Logout from your account
     print("Picture uploaded successfully.")
     bot.logout()
 
-def clean_env():
-    try:
-        rmtree('config')
-    except:
-        pass
-    try:
-        rmtree('image.jpg.REMOVE_ME')
-    except:
-        pass
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--url', action='store', type=str,
-                        help='url from the bing image creator')
-    parser.add_argument('--prompt', action='store', type=str,
-                        help='continue to the next target on error')
-
-    args = parser.parse_args()
-
+def askHastags ():
     hastags = []
     while True:
         hastag = input('Enter a hastag (or press Enter to finish): ')
@@ -77,11 +76,32 @@ def main():
             hastags.append(hastag)
         else:
             break
+    return hastags
+
+def clean_env():
+    folders = ['config', work_folder]
+    for f in folders:
+        try:
+            rmtree(f)
+        except:
+            pass
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--urls', nargs='+',
+                        help='url from the bing image creator')
+    parser.add_argument('--prompt', action='store', type=str,
+                        help='continue to the next target on error')
+
+    args = parser.parse_args()
 
     clean_env()
-    get_the_image(str(args.url))
-    publish_the_image(str(args.prompt), hastags)
+    hastags = askHastags()
+    get_the_images(args.urls)
+    publish_the_images(str(args.prompt), hastags)
     print("Action complete.")
 
 if __name__ == "__main__":
     main()
+    exit(0)

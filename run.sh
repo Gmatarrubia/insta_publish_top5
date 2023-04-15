@@ -1,3 +1,7 @@
 #!/bin/bash
 
-python3 ./main.py --prompt "\"$1\"" --url "$2"
+prompt=$1
+shift
+urls=("$@")
+
+python3 ./main.py --prompt "\"$prompt\"" --url "$urls"
