@@ -4,4 +4,6 @@ prompt=$1
 shift
 urls=("$@")
 
-python3 ./main.py --prompt "\"$prompt\"" --url "$urls"
+python3 ./main.py --prompt "\"$prompt\"" --url "${urls[@]}"
+
+exit 0
